@@ -1,4 +1,4 @@
-# FIC_Codes｜论文代码与复现资料
+# FICCodes｜论文代码与复现资料
 
 本仓库集中整理团队已发表论文的代码、运行说明及相关资源，方便研究成果归档、共享与复现。
 
@@ -102,7 +102,7 @@
 ### 第一步：创建自己的仓库副本
 
 1. 登录自己的 GitHub 账号。
-2. 打开主仓库：<https://github.com/FICCodes/FIC_Codes>。
+2. 打开主仓库：<https://github.com/wangy5027/FICCodes>。
 3. 点击右上角 **Fork**，再点击 **Create fork**。
 
 这会在你的账号下建立仓库副本。后续代码先提交到自己的副本，再申请合并到主仓库。已有副本时，先通过 **Sync fork** 同步主仓库更新。
@@ -132,7 +132,7 @@
 检查目标：
 
 ```text
-目标仓库（base repository）：FICCodes/FIC_Codes
+目标仓库（base repository）：wangy5027/FICCodes
 目标分支（base）：main
 来源仓库（head repository）：你自己的仓库副本
 来源分支（compare）：本次提交的分支
@@ -173,7 +173,7 @@ GitHub 用户名：
 
 ```text
 请将我的论文项目整理并提交到以下 GitHub 仓库：
-https://github.com/FICCodes/FIC_Codes
+https://github.com/wangy5027/FICCodes
 
 论文全名：[填写]
 文章简写：[填写]
@@ -189,7 +189,7 @@ https://github.com/FICCodes/FIC_Codes
 
 我授权你在当前已登录的本人 GitHub 账号下：
 创建或复用主仓库的 Fork，创建提交分支，上传整理后的论文代码，
-并向 FICCodes/FIC_Codes 的 main 分支创建 Pull Request。
+并向 wangy5027/FICCodes 的 main 分支创建 Pull Request。
 不要替维护者合并 PR。
 
 请完成以下工作：
@@ -231,7 +231,7 @@ https://github.com/FICCodes/FIC_Codes
 8. 提交前检查实际待上传文件和差异，确认没有意外包含数据、
    大文件、凭据或其他无关内容，然后推送到我的 Fork。
 
-9. 向 FICCodes/FIC_Codes 的 main 分支创建 PR。
+9. 向 wangy5027/FICCodes 的 main 分支创建 PR。
    标题为“提交：文章简写_年份”，说明论文信息、负责人、
    提交内容、数据链接位置、已执行检查及已知限制。
    如果已有同一任务的 PR，更新原 PR，不重复创建。
