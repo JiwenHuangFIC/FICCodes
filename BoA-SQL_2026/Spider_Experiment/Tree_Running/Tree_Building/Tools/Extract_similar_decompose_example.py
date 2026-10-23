@@ -3,7 +3,7 @@ import json
 import os
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-cases_file = current_file_path + "/Decompose_cases.json"
+cases_file = os.path.join(current_file_path, 'Decompose_cases.json')
 
 def read_cases_file(cases_file_path):
     with open(cases_file, 'r') as file:

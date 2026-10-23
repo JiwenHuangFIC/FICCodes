@@ -133,7 +133,7 @@ def eval_hardness(sql):
 
 @func_set_timeout(5)
 def get_data_from_database(db_id, sql_code):
-    db_path = upper_file_path + r'\spider\test_database\\' + db_id + '\\' + db_id + '.sqlite'
+    db_path = os.path.join(upper_file_path, 'spider', 'test_database', db_id, db_id + '.sqlite')
     conn = sqlite3.connect(db_path)
     conn.text_factory = lambda x : str(x, 'gbk', 'ignore')
     cursor = conn.cursor()
@@ -213,7 +213,7 @@ def if_exactly_same(target_file, project_file):
        
 def obtain_predict_csv(predict_file_path, gold_file_path, project_name): 
     
-    predict_folder_path = current_file_path + "\\" + project_name + "_predict_ouput\\"
+    predict_folder_path = os.path.join(current_file_path, project_name + '_predict_ouput')
     if not os.path.exists(predict_folder_path):
         # Create the new folder
         os.makedirs(predict_folder_path)
@@ -232,7 +232,7 @@ def obtain_predict_csv(predict_file_path, gold_file_path, project_name):
             line = line.strip()  # Remove leading/trailing whitespaces
             print(line)
             sql_code, database_name = line.split('\t')
-            db = upper_file_path + r'\spider\test_database\\' + database_name + '\\' + database_name + '.sqlite'
+            db = os.path.join(upper_file_path, 'spider', 'test_database', database_name, database_name + '.sqlite')
             schema = Schema(get_schema(db))
             g_sql = get_sql(schema, sql_code)
             level = eval_hardness(g_sql)
@@ -244,11 +244,10 @@ def obtain_predict_csv(predict_file_path, gold_file_path, project_name):
                 
             if type(predict_df) == type("str"):
                 txt_name = str(index) + '_' + level + '_txt_output.txt'
-                file_path = predict_folder_path + level + '\\' + txt_name
-                if not os.path.exists(predict_folder_path + level):
-                    os.makedirs(predict_folder_path + level)
+                file_path = os.path.join(predict_folder_path, level, txt_name)
+                if not os.path.exists(os.path.join(predict_folder_path, level)):
+                    os.makedirs(os.path.join(predict_folder_path, level))
 
-                # file_path = predict_folder_path + txt_name
                 with open(file_path, "w") as file:
                     file.write(predict_df)
                 index += 1
@@ -258,24 +257,24 @@ def obtain_predict_csv(predict_file_path, gold_file_path, project_name):
                 # print(predict_df)
                 csv_name = str(index) + '_' + level + '_target_output.csv'
                 # print(csv_name)
-                file_path = predict_folder_path + level + '\\' + csv_name
-                if not os.path.exists(predict_folder_path + level):
-                    os.makedirs(predict_folder_path + level)
+                file_path = os.path.join(predict_folder_path, level, csv_name)
+                if not os.path.exists(os.path.join(predict_folder_path, level)):
+                    os.makedirs(os.path.join(predict_folder_path, level))
                 predict_df.to_csv(file_path, index=False)
                 index += 1
 
 #######Correctified EX#######
 def correctified_eval_result(predict_file_path, gold_file_path,project_name):
-    correctified_dev_target_output_path = current_file_path + "\\" + "Correctified_Spider_dev_target_ouput"
-    project_path = current_file_path + "\\" + project_name + "_predict_ouput"
+    correctified_dev_target_output_path = os.path.join(current_file_path, 'Correctified_Spider_dev_target_ouput')
+    project_path = os.path.join(current_file_path, project_name + '_predict_ouput')
     hardness_levels = ['easy','medium','hard','extra']
     hardness_ex = {'easy': 0, 'medium': 0, 'hard': 0, 'extra': 0, 'overall': 0}
     
     wrong_list = []
     
     for hardness in hardness_levels:
-        target_folder_path = correctified_dev_target_output_path + "\\" + hardness
-        project_folder_path = project_path + "\\" + hardness
+        target_folder_path = os.path.join(correctified_dev_target_output_path, hardness)
+        project_folder_path = os.path.join(project_path, hardness)
         
         try:
             project_file_list = os.listdir(project_folder_path)
@@ -287,20 +286,20 @@ def correctified_eval_result(predict_file_path, gold_file_path,project_name):
         
         target_upper_folder_list = os.listdir(target_folder_path)
         for upper in target_upper_folder_list:
-            target_file_path = target_folder_path + "\\" + upper
+            target_file_path = os.path.join(target_folder_path, upper)
             target_thisfolder_file_list = os.listdir(target_file_path)
             subset_len_or_exactly = if_last_letter_(upper)
             index = extract_file_index(upper)
             key = 0
             for target_file in target_thisfolder_file_list:
  
-                current_target_file_path = target_file_path + "\\" + target_file
+                current_target_file_path = os.path.join(target_file_path, target_file)
                 with open(current_target_file_path, 'rb') as f:
                         target_result = chardet.detect(f.read())
                 target_encoding = target_result['encoding']
                 current_target_file = open(current_target_file_path, 'r', errors=None, encoding=target_encoding)
 
-                current_project_file_path = project_folder_path + "\\" + index + "_" + hardness + "_target_output.csv"
+                current_project_file_path = os.path.join(project_folder_path, index + '_' + hardness + '_target_output.csv')
                 try:
                     with open(current_project_file_path, 'rb') as f:
                             project_result = chardet.detect(f.read())

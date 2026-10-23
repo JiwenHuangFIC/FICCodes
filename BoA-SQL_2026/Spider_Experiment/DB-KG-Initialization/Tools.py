@@ -1,3 +1,4 @@
+import os
 import re
 
 def catch_table_name(table):
@@ -175,8 +176,8 @@ def read_create_table_messages(file_path):
     return paragraphs
 
 def write_c_t_m_file(table_list, project_path):
-    old_c_t_m_file_path_1 = project_path + "\\Tree_Running\\Tree_Building\\Agents\\Tools\\CREATE_TABLE_MESSAGE.txt"
-    old_c_t_m_file_path_2 = project_path + "\\Tree_Running\\Agents\\Tools\\CREATE_TABLE_MESSAGE.txt"
+    old_c_t_m_file_path_1 = os.path.join(project_path, 'Tree_Running', 'Tree_Building', 'Agents', 'Tools', 'CREATE_TABLE_MESSAGE.txt')
+    old_c_t_m_file_path_2 = os.path.join(project_path, 'Tree_Running', 'Agents', 'Tools', 'CREATE_TABLE_MESSAGE.txt')
     with open(old_c_t_m_file_path_1, "w") as file:
         for i in table_list:
             file.write(i + ";\n")

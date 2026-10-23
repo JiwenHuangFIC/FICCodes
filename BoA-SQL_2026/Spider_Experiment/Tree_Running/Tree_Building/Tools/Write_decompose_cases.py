@@ -3,7 +3,7 @@ import json
 import os
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-cases_file = current_file_path + "/Decompose_cases.json"
+cases_file = os.path.join(current_file_path, 'Decompose_cases.json')
 
 data1 = {
     'filtering': 1,

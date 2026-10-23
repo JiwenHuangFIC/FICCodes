@@ -1,3 +1,5 @@
+import os
+from Tree_Running.paths import PROJECT_ROOT
 from Tree_Running.Tree_Building.Task_Tree_Building import *
 from Tree_Running.Tree_Building.Task_Tree_Optimization import *
 from Tree_Running.Agents.Code_generation import *
@@ -11,9 +13,8 @@ from Tree_Running.Tools.Running_tools import *
 # from Tools.Running_tools import *
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-index = current_file_path.find("Spider_Experiment")
-record_path = current_file_path[:index + len("Spider_Experiment")]
-printlog_path = record_path + r"\printlog.txt"
+record_path = str(PROJECT_ROOT)
+printlog_path = os.path.join(record_path, 'printlog.txt')
 
 def node_execution(Task_tree, kg_dict, start_node, pre_tasks, pre_sql, db_id, count = 0):
     

@@ -1,3 +1,5 @@
+import os
+from Tree_Running.paths import PROJECT_ROOT
 from treelib import Node, Tree
 import time
 from Tree_Running.Tree_Building.Agents import Task_decompose
@@ -7,9 +9,8 @@ from Tree_Running.Tree_Building.Agents.Tools.KG_DB_foundamental_functions import
 # from Tree_Building.Agents import KG_db_info_infer
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-index = current_file_path.find("Spider_Experiment")
-record_path = current_file_path[:index + len("Spider_Experiment")]
-printlog_path = record_path + r"\printlog.txt"
+record_path = str(PROJECT_ROOT)
+printlog_path = os.path.join(record_path, 'printlog.txt')
 
 def obtain_full_db_kg():
     table_created_meaages = get_table_created_meaages()

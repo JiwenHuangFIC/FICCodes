@@ -1,3 +1,5 @@
+import os
+from Tree_Running.paths import PROJECT_ROOT
 from Tree_Running.Agents.agents_init import *
 from Tree_Running.Agents.Tools.zhengze import *
 from Tree_Running.Agents.Tools.KG_DB_foundamental_functions import *
@@ -11,9 +13,8 @@ from Tree_Running.Agents.Code_checking import *
 # from Agents.Code_checking import *
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-index = current_file_path.find("Spider_Experiment")
-record_path = current_file_path[:index + len("Spider_Experiment")]
-printlog_path = record_path + r"\printlog.txt"
+record_path = str(PROJECT_ROOT)
+printlog_path = os.path.join(record_path, 'printlog.txt')
 
 CodeGenerating_prompt_1="""
 Please think step by step. You are a professional SQL engineer, I'm going to give you a sql task and a description of database.According to the given information, generate a sql code to accomplish the task.Your one action should follow the framework below:

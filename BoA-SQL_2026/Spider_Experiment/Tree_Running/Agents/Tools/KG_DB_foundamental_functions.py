@@ -1,3 +1,4 @@
+from Tree_Running.paths import PROJECT_ROOT
 import sqlite3
 import pandas as pd
 import re
@@ -6,13 +7,12 @@ import os
 import copy
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-index = current_file_path.find("Spider_Experiment")
-project_file_path = current_file_path[:index + len("Spider_Experiment")]
+project_file_path = str(PROJECT_ROOT)
 
-dkg_file = current_file_path + "/Database_kg.txt"
+dkg_file = os.path.join(current_file_path, 'Database_kg.txt')
 
 def get_data_from_database(db_id, sql_code):
-    db_path = project_file_path + r'\spider\test_database\\' + db_id + '\\' + db_id +'.sqlite'
+    db_path = os.path.join(project_file_path, 'spider', 'test_database', db_id, db_id + '.sqlite')
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
@@ -217,7 +217,7 @@ def read_create_table_messages(file_path):
     
     return paragraphs
 
-table_created_meaages = read_create_table_messages(current_file_path + "/CREATE_TABLE_MESSAGE.txt")
+table_created_meaages = read_create_table_messages(os.path.join(current_file_path, 'CREATE_TABLE_MESSAGE.txt'))
 
 def get_table_created_meaages():
     return table_created_meaages

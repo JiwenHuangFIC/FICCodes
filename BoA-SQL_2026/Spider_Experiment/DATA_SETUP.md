@@ -14,7 +14,7 @@
 
 ## 2. Agent 与修正版评测使用的路径
 
-以 `Spider_Experiment` 为项目根目录，整理为：
+以包含 `Run.py` 的目录为项目根目录（下图以当前名称 `Spider_Experiment` 为例，可重命名），整理为：
 
 ```text
 Spider_Experiment/
@@ -38,7 +38,7 @@ Spider_Experiment/
 
 根目录 `Run.py` 自动按 `spider/dev.json` 的实际长度，从第 0 题开始依次运行全部题目，不再读取额外的题号选择文件。对于 1,034 道题的开发集，运行范围为 `0` 至 `1033`。原有失败时停止的处理保持不变；修复失败原因后重新启动，仍从第 0 题开始。输出文件仍采用追加写入，重新完整运行前请移走或清空根目录的旧运行输出，避免重复追加；不要删除 `Evaluation/` 中保留的最终评测输入。
 
-`DB-KG-Initialization/` 和两套 Agent 的 Tools 目录中保留了小型 `CREATE_TABLE_MESSAGE.txt`、`Database_kg.txt`。它们是现有代码使用的结构文件，运行时会按数据库更新；本次未改动相关源码和初始化方式。
+`DB-KG-Initialization/` 和两套 Agent 的 Tools 目录中保留了小型 `CREATE_TABLE_MESSAGE.txt`、`Database_kg.txt`。它们是现有代码使用的结构文件，运行时会按数据库更新；初始化脚本通过当前 Python 解释器调用，路径相对于源码位置确定，支持含空格的目录名。
 
 ## 3. 下载 test-suite 专用数据库
 
@@ -101,4 +101,4 @@ python 'correctified_official_evaluation/correctified_evaluation.py' "$evalDir/S
 
 运行此脚本还需要 `pandas`、`chardet`、`func_timeout`、`tabulate`、`nltk` 等适用依赖。该脚本输出的是其定义的修正统计，请按实际实验方法使用，不要将其单独输出直接当作 test-suite 总分。
 
-本次只清理文件并补充数据准备说明，没有改动 Agent 或评测算法，也没有重新运行或验证实验分数。
+路径定位与初始化调用已完成可移植性修复，Agent 和评测算法未因此更改；尚未重新运行或验证实验分数。显式传给评测命令的相对输入路径按当前工作目录解释，上述命令按项目根目录编写。

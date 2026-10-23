@@ -11,7 +11,6 @@ from process_sql import get_schema, Schema, get_sql
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
 upper_file_path = os.path.dirname(current_file_path)
-# dkg_file = current_file_path + r"\Database_kg.txt"
 print(upper_file_path)
 
 #######Level of difficulty(Spider)#######
@@ -133,7 +132,7 @@ def eval_hardness(sql):
 
 @func_set_timeout(5)
 def get_data_from_database(db_id, sql_code):
-    db_path = upper_file_path + r'\spider\test_database\\' + db_id + '\\' + db_id + '.sqlite'
+    db_path = os.path.join(upper_file_path, 'spider', 'test_database', db_id, db_id + '.sqlite')
     conn = sqlite3.connect(db_path)
     conn.text_factory = lambda x : str(x, 'gbk', 'ignore')
     cursor = conn.cursor()
@@ -147,7 +146,7 @@ def get_data_from_database(db_id, sql_code):
         return str(bug)
 
 def obtain_gold_csv(gold_file_path, project_name): 
-    gold_folder_path = current_file_path + "\\" + project_name + "_target_ouput"
+    gold_folder_path = os.path.join(current_file_path, project_name + '_target_ouput')
     if not os.path.exists(gold_folder_path):
         # Create the new folder
         os.makedirs(gold_folder_path)
@@ -161,7 +160,7 @@ def obtain_gold_csv(gold_file_path, project_name):
             line = line.strip()  # Remove leading/trailing whitespaces
             sql_code, database_name = line.split('\t')
             
-            db = upper_file_path + r'\spider\test_database\\' + database_name + '\\' + database_name + '.sqlite'
+            db = os.path.join(upper_file_path, 'spider', 'test_database', database_name, database_name + '.sqlite')
             schema = Schema(get_schema(db))
             g_sql = get_sql(schema, sql_code)
             level = eval_hardness(g_sql)
@@ -177,7 +176,7 @@ def obtain_gold_csv(gold_file_path, project_name):
                 print("wrong")
                 print(df)
                 txt_name = str(index) + '_' + level + '_txt_output.txt'
-                file_path = gold_folder_path + "\\" + level + '\\' + txt_name
+                file_path = os.path.join(gold_folder_path, level, txt_name)
                 if not os.path.exists(file_path):
                     os.makedirs(file_path)
                 with open(file_path, "w") as file:
@@ -188,15 +187,15 @@ def obtain_gold_csv(gold_file_path, project_name):
                 print(df)
                 csv_name = str(index) + '_' + level + '_target_output.csv'
                 print(csv_name)
-                file_path = gold_folder_path + "\\" + level + '\\' + csv_name
-                if not os.path.exists(gold_folder_path + "\\" + level):
-                    os.makedirs(gold_folder_path + "\\" + level)
+                file_path = os.path.join(gold_folder_path, level, csv_name)
+                if not os.path.exists(os.path.join(gold_folder_path, level)):
+                    os.makedirs(os.path.join(gold_folder_path, level))
                 df.to_csv(file_path, index=False)
                 index += 1
                 
 def obtain_predict_csv(gold_file_path, predict_file_path, project_name): 
     
-    predict_folder_path = current_file_path + "\\" + project_name + "_predict_ouput\\"
+    predict_folder_path = os.path.join(current_file_path, project_name + '_predict_ouput')
     if not os.path.exists(predict_folder_path):
         # Create the new folder
         os.makedirs(predict_folder_path)
@@ -216,7 +215,7 @@ def obtain_predict_csv(gold_file_path, predict_file_path, project_name):
             line = line.strip()  # Remove leading/trailing whitespaces
             print(line)
             sql_code, database_name = line.split('\t')
-            db = upper_file_path + r'\spider\test_database\\' + database_name + '\\' + database_name + '.sqlite'
+            db = os.path.join(upper_file_path, 'spider', 'test_database', database_name, database_name + '.sqlite')
             schema = Schema(get_schema(db))
             g_sql = get_sql(schema, sql_code)
             level = eval_hardness(g_sql)
@@ -228,11 +227,10 @@ def obtain_predict_csv(gold_file_path, predict_file_path, project_name):
                 
             if type(predict_df) == type("str"):
                 txt_name = str(index) + '_' + level + '_txt_output.txt'
-                file_path = predict_folder_path + level + '\\' + txt_name
-                if not os.path.exists(predict_folder_path + level):
-                    os.makedirs(predict_folder_path + level)
+                file_path = os.path.join(predict_folder_path, level, txt_name)
+                if not os.path.exists(os.path.join(predict_folder_path, level)):
+                    os.makedirs(os.path.join(predict_folder_path, level))
 
-                # file_path = predict_folder_path + txt_name
                 with open(file_path, "w") as file:
                     file.write(predict_df)
                 index += 1
@@ -242,21 +240,21 @@ def obtain_predict_csv(gold_file_path, predict_file_path, project_name):
                 # print(predict_df)
                 csv_name = str(index) + '_' + level + '_target_output.csv'
                 # print(csv_name)
-                file_path = predict_folder_path + level + '\\' + csv_name
-                if not os.path.exists(predict_folder_path + level):
-                    os.makedirs(predict_folder_path + level)
+                file_path = os.path.join(predict_folder_path, level, csv_name)
+                if not os.path.exists(os.path.join(predict_folder_path, level)):
+                    os.makedirs(os.path.join(predict_folder_path, level))
                 predict_df.to_csv(file_path, index=False)
                 index += 1
 
 #######Three Metrics#######
 # ER rate
 def ER_rate(project_name):
-    predict_folder_path = current_file_path + "\\" + project_name + "_predict_ouput"
+    predict_folder_path = os.path.join(current_file_path, project_name + '_predict_ouput')
     hardness_levels = ['easy','medium','hard','extra']
     hardness_ers = {'easy': 0, 'medium': 0, 'hard': 0, 'extra': 0}
 
     for i in hardness_levels:
-        hardness_predict_folder_path = predict_folder_path + "\\" + i
+        hardness_predict_folder_path = os.path.join(predict_folder_path, i)
         # Get the list of files in the directory
         file_list = os.listdir(hardness_predict_folder_path)
 
@@ -293,8 +291,8 @@ def PR_rate(project_name):
     unmatch_list_2 = []
     for i in hardness_levels:
         
-        predict_csv_folder_path = current_file_path + "\\" + project_name + "_predict_ouput" + "\\" + i
-        gold_csv_folder_path = current_file_path + "\\" + project_name + "_target_ouput" + "\\" + i
+        predict_csv_folder_path = os.path.join(current_file_path, project_name + '_predict_ouput', i)
+        gold_csv_folder_path = os.path.join(current_file_path, project_name + '_target_ouput', i)
         predict_file_list = os.listdir(predict_csv_folder_path)
         predict_file_names = [file for file in predict_file_list if os.path.isfile(os.path.join(predict_csv_folder_path, file))]
         predict_file_names = sorted(predict_file_names, key=lambda x: int(re.search(r"\d+", x).group()))
@@ -303,21 +301,19 @@ def PR_rate(project_name):
         gold_file_names = [file for file in gold_file_list if os.path.isfile(os.path.join(gold_csv_folder_path, file))]
         gold_file_names = sorted(gold_file_names, key=lambda x: int(re.search(r"\d+", x).group()))
         
-        # eval_result_file_path = current_file_path + '\\' + i + '_question_list.txt'
-        # with open(eval_result_file_path, "w") as file:
         #     results = str(gold_file_names)
         #     file.write(results)
         if len(gold_file_list) == len(predict_file_list):
             pass_count = 0
             for gold_file in gold_file_names:
-                current_gold_file_path = gold_csv_folder_path + "\\" + gold_file
+                current_gold_file_path = os.path.join(gold_csv_folder_path, gold_file)
                 current_gold_file = open(current_gold_file_path, 'r', errors=None, encoding='utf-8')
                 index = re.findall("\d+\.?\d*", gold_file)
-                current_predict_file_path = predict_csv_folder_path + "\\" + index[0] + "_" + i + "_" + "target_output.csv"
+                current_predict_file_path = os.path.join(predict_csv_folder_path, index[0] + '_' + i + '_' + 'target_output.csv')
                 try:
                     current_predict_file = open(current_predict_file_path, 'r', errors=None, encoding='utf-8')
                 except:
-                    current_predict_file_path = predict_csv_folder_path + "\\" + index[0] + "_" + i + "_" + "target_output.txt"
+                    current_predict_file_path = os.path.join(predict_csv_folder_path, index[0] + '_' + i + '_' + 'target_output.txt')
                 
                 csv_data_gold = csv.reader(current_gold_file)
                 if "txt" not in current_predict_file_path:
@@ -367,60 +363,14 @@ def PR_rate(project_name):
         print("PR of", k, ":", v)
     return hardness_prs, unmatch_list_1, unmatch_list_2
 
-# gold_file_path = upper_file_path + r"""\experiment_version1\SDB_GPT3.5_gold.txt"""
-# sdb_predict_file_path = upper_file_path + r"""\experiment_version1\SDB_GPT3.5_predict.txt"""
-# obtain_gold_csv(gold_file_path, "SDB_GPT3.5")
-# obtain_predict_csv(gold_file_path, sdb_predict_file_path, "SDB_GPT3.5")
 
-# er_dict = ER_rate("SDB_GPT3.5")
-# print("#########################")
-# pr, unmatch_list_1, unmatch_list_2 = PR_rate("SDB_GPT3.5")
+if __name__ == "__main__":
+    import argparse
 
-# for i in unmatch_list_1:
-#     if "extra" in i:
-#         print(i)
-
-# eval_result_file_path = current_file_path + '\\' + 'SDB_GPT3.5_result.txt'
-# with open(eval_result_file_path, "w") as file:
-#     results = "ER: \n" + str(er_dict) + "\n" +'\n'+"PR: \n"+ str(pr)
-#     file.write(results)
-
-#######################################################################
-# gold_file_path = upper_file_path + r"""\experiment_version1\SDB_GPT4.0_gold.txt"""
-# sdb_predict_file_path = upper_file_path + r"""\experiment_version1\SDB_GPT4.0_predict.txt"""
-# obtain_gold_csv(gold_file_path, "SDB_GPT4.0")
-# obtain_predict_csv(gold_file_path, sdb_predict_file_path, "SDB_GPT4.0")
-
-er_dict = ER_rate("SDB_GPT4.0")
-print("#########################")
-pr, unmatch_list_1, unmatch_list_2 = PR_rate("SDB_GPT4.0")
-# PR_rate("SDB_GPT4.0")
-
-for i in unmatch_list_1:
-    if "easy" in i:
-        print(i)
-
-# eval_result_file_path = current_file_path + '\\' + 'SDB_GPT4.0_result.txt'
-# with open(eval_result_file_path, "w") as file:
-#     results = "ER: \n" + str(er_dict) + "\n" +'\n'+"PR: \n"+ str(pr)
-#     file.write(results)
-
-# pr_35, unmatch_list_1_35, unmatch_list_2_35 = PR_rate("SDB_GPT3.5")
-# pr_40, unmatch_list_1_40, unmatch_list_2_40 = PR_rate("SDB_GPT4.0")
-
-# for i in unmatch_list_1_40:
-#     if i not in unmatch_list_1_35:
-#         print(i)
-
-# gold_file_path = upper_file_path + r"""\experiment_version1\Graphix_gold.txt"""
-# sdb_predict_file_path = upper_file_path + r"""\experiment_version1\Graphix_predict.txt"""
-# obtain_gold_csv(gold_file_path, "Graphix")
-# obtain_predict_csv(gold_file_path, sdb_predict_file_path, "Graphix")
-
-# er_dict = ER_rate("SDB_GPT4.0")
-# print("#########################")
-# pr, unmatch_list_1, unmatch_list_2 = PR_rate("SDB_GPT4.0")
-
-# for i in unmatch_list_1:
-#     if "medium" in i:
-#         print(i)
+    parser = argparse.ArgumentParser(description="Summarize previously generated evaluation outputs.")
+    parser.add_argument("project_name", help="Prefix of existing target/prediction output directories")
+    args = parser.parse_args()
+    er_dict = ER_rate(args.project_name)
+    pr, unmatch_list_1, unmatch_list_2 = PR_rate(args.project_name)
+    print(er_dict)
+    print(pr)

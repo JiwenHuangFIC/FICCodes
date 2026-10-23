@@ -1,3 +1,4 @@
+from Tree_Running.paths import PROJECT_ROOT
 import sqlite3
 import pandas as pd
 import re
@@ -6,7 +7,7 @@ import os
 import copy
 
 current_file_path = os.path.dirname(os.path.abspath(__file__))
-dkg_file = current_file_path + r"\Database_kg.txt"
+dkg_file = os.path.join(current_file_path, 'Database_kg.txt')
 
 def read_KG_from_file(filename):
     KG = []
@@ -19,7 +20,7 @@ def read_KG_from_file(filename):
 KG = read_KG_from_file(dkg_file)
 
 def get_data_from_database(db_id, sql_code):
-    db_path = r"D:\各种文件\工作用文件\SmarterDB\SQL_Generation\Spider_Experiment" + r'\spider\test_database\\' + db_id + '\\schema.sql'
+    db_path = str(PROJECT_ROOT / "spider" / "test_database" / db_id / (db_id + ".sqlite"))
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     try:
@@ -225,10 +226,10 @@ def read_create_table_messages(file_path):
     
     return paragraphs
 
-table_created_meaages = read_create_table_messages(current_file_path + "\\CREATE_TABLE_MESSAGE.txt")
+table_created_meaages = read_create_table_messages(os.path.join(current_file_path, 'CREATE_TABLE_MESSAGE.txt'))
 
 def get_table_created_meaages():
-    table_created_meaages = read_create_table_messages(current_file_path + "\\CREATE_TABLE_MESSAGE.txt")
+    table_created_meaages = read_create_table_messages(os.path.join(current_file_path, 'CREATE_TABLE_MESSAGE.txt'))
     return table_created_meaages
 
 def kg_to_description(kg):

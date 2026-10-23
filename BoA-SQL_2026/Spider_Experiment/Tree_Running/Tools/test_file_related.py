@@ -1,15 +1,15 @@
+from Tree_Running.paths import PROJECT_ROOT
 import json
 import re
 import os
+import subprocess
+import sys
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
-index = current_directory.find("Spider_Experiment")
-project_path = current_directory[:index + len("Spider_Experiment")]
+project_path = str(PROJECT_ROOT)
 print(project_path)
-# test_file_path = project_path + r"\spider\test_data\dev.json"
-# test_database_path = project_path + r"\spider\test_database"
-test_file_path = project_path + r"\spider\dev.json"
-test_database_path = project_path + r"\spider\test_database"
+test_file_path = os.path.join(project_path, 'spider', 'dev.json')
+test_database_path = os.path.join(project_path, 'spider', 'test_database')
 
 def read_json_file(queries_file):
     with open(queries_file, 'r') as file:
@@ -38,30 +38,30 @@ def get_test_db_id_query_question(test_file_object):
 
 def write_gold_txt_file(query, db_id):
     gold_content = query + '\t' + db_id + '\n'
-    gold_text_path = project_path + r'\DEV_gold.txt'
+    gold_text_path = os.path.join(project_path, 'DEV_gold.txt')
     with open(gold_text_path, 'a') as file:
         file.write(gold_content)
         
 def write_predict_txt_file(predict):
     gold_content = predict + '\n'
-    predict_text_path = project_path + r'\DEV_predict.txt'
+    predict_text_path = os.path.join(project_path, 'DEV_predict.txt')
     with open(predict_text_path, 'a') as file:
         file.write(gold_content)
         
 def write_predict_txt_file_tmp(predict):
     gold_content = predict + '\n'
-    predict_text_path = project_path + r'\DEV_predict_tmp.txt'
+    predict_text_path = os.path.join(project_path, 'DEV_predict_tmp.txt')
     with open(predict_text_path, 'a') as file:
         file.write(gold_content)
         
 def write_question_txt_file(index, question):
     question_content = str(index) + ' ' + question + '\n'
-    question_text_path = project_path + r'\DEV_question.txt'
+    question_text_path = os.path.join(project_path, 'DEV_question.txt')
     with open(question_text_path, 'a') as file:
         file.write(question_content)
 
 def write_ini_table_message_file(pure_schema):
-    ini_table_message_file_path = project_path + r'\DB-KG-Initialization\CREATE_TABLE_MESSAGE.txt'
+    ini_table_message_file_path = os.path.join(project_path, 'DB-KG-Initialization', 'CREATE_TABLE_MESSAGE.txt')
     with open(ini_table_message_file_path, 'w') as file:
         file.write(pure_schema)
 
@@ -74,14 +74,14 @@ def select_pure_schema(schema_text):
     return commands
     
 def get_sql_schema(db_id):
-    schema_path = project_path + r'\\spider\test_database\\' + db_id + '\\schema.sql'
+    schema_path = os.path.join(project_path, 'spider', 'test_database', db_id, 'schema.sql')
     with open(schema_path, 'r', encoding='utf-8') as file:
         schema_text = file.read()
     pure_schema = select_pure_schema(schema_text)
     return pure_schema
 
 def read_kg_file():
-    kg_file_path = project_path + r'\DB-KG-Initialization\Database_kg.txt'
+    kg_file_path = os.path.join(project_path, 'DB-KG-Initialization', 'Database_kg.txt')
     with open(kg_file_path, 'r') as file:
         file_contents = file.read()
     if len(file_contents) < 2:
@@ -92,9 +92,8 @@ def read_kg_file():
 def change_kg(db_id):
     pure_schema = get_sql_schema(db_id)
     write_ini_table_message_file(pure_schema)
-    ini_kg_tool_path = 'python '+project_path + r'\DB-KG-Initialization\Get_local_db_kg.py'
-    print(ini_kg_tool_path)
-    os.system(ini_kg_tool_path)
+    ini_kg_tool_path = PROJECT_ROOT / 'DB-KG-Initialization' / 'Get_local_db_kg.py'
+    subprocess.run([sys.executable, str(ini_kg_tool_path)], check=True)
     
     kg_file_success_or_not = read_kg_file()
     return kg_file_success_or_not
@@ -129,7 +128,7 @@ def tree_to_dict(tree):
 
 def write_tree_to_json_file(tree):
     tree_dict = tree_to_dict(tree)
-    file_path = project_path + r"\trees.json"
+    file_path = os.path.join(project_path, 'trees.json')
     with open(file_path, "a") as file:
         json.dump(tree_dict, file, indent=4)
     
@@ -143,8 +142,6 @@ def write_tree_to_json_file(tree):
 # tree_dict = tree_to_dict(tree)
 
 # # Write the tree dictionary to a JSON file
-# file_path = project_path + r"\treee.json"
-# with open(file_path, "w") as file:
 #     json.dump(tree_dict, file, indent=4)
 
 # print("Tree successfully written to JSON file.")
